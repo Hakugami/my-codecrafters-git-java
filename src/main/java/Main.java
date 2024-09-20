@@ -3,10 +3,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HexFormat;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.Inflater;
+import java.util.zip.*;
 
 public class Main {
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
@@ -16,9 +16,11 @@ public class Main {
             case "init" -> initGitDirectory();
             case "cat-file" -> catFile(args[2]);
             case "hash-object" -> hashObject(args[2]);
+            case "ls-tree" -> showTree(args[2]);
             default -> System.out.println("Unknown command: " + command);
         }
     }
+
 
     private static void initGitDirectory() {
         final File root = new File(".git");
@@ -81,6 +83,46 @@ public class Main {
         writeCompressedContent(blobFile, fileType, space, nullChar, contentBytes, contentLength);
 
         System.out.println(hashString);
+    }
+    private static void showTree(final String arg) throws FileNotFoundException {
+        final String folderHash = arg.substring(0, 2);
+        final String fileHash = arg.substring(2);
+        final File blobFile = new File(".git/objects/" + folderHash + "/" + fileHash);
+        final ArrayList<String> tree = new ArrayList<>();
+
+        try (BufferedReader bufferedReader = new BufferedReader((new InputStreamReader(new InflaterInputStream(new FileInputStream(blobFile)))))) {
+            StringBuilder content = new StringBuilder();
+            int character;
+
+            while ((character = bufferedReader.read()) != -1) {
+                if (character == 0) {
+                    break;
+                }
+            }
+
+            while ((character = bufferedReader.read()) != -1) {
+                content.append((char) character);
+            }
+            String[] lines = content.toString().split("100644|040000|100755|120000|40000");
+
+            for (String line : lines) {
+                String[] parts = line.split("\0");
+                String hash = parts[0].trim();
+                if(!hash.isBlank()) {
+                    tree.add(hash);
+                }
+            }
+            Collections.sort(tree);
+
+            for (String hash : tree) {
+                System.out.println(hash);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
     private static MessageDigest initializeDigest() throws NoSuchAlgorithmException {
