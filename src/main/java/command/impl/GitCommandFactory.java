@@ -16,6 +16,7 @@ public class GitCommandFactory {
         commands.put("ls-tree", LsTreeCommand::new);
         commands.put("write-tree", WriteTreeCommand::new);
         commands.put("commit-tree", CommitTreeCommand::new);
+        commands.put("clone" , CloneCommand::new);
     }
 
     public static GitCommand getCommand(String commandName) {

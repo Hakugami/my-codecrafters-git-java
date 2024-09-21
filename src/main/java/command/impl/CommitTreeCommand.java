@@ -1,13 +1,17 @@
 package command.impl;
 
 import command.GitCommand;
+import model.AuthorSignature;
 import model.Commit;
 import model.GitObject;
+import util.Git;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class CommitTreeCommand implements GitCommand {
@@ -51,17 +55,20 @@ public class CommitTreeCommand implements GitCommand {
         // Use current date-time in proper format for Git commits
         String date = getCurrentDateTime();
 
-        // Build the author and committer string
-        String authorInfo = AUTHOR_NAME + " <" + AUTHOR_EMAIL + "> " + date;
+
+
+        AuthorSignature authorSignature = new AuthorSignature(AUTHOR_NAME, AUTHOR_EMAIL, ZonedDateTime.now());
 
         // Create a new commit object, passing all necessary fields
-        Commit commit = new Commit(AUTHOR_NAME, message, treeHash, parentHash, date, authorInfo);
+        Commit commit = new Commit(treeHash, parentHash, authorSignature, authorSignature, message);
 
         // Convert the commit object to bytes using UTF-8
         byte[] content = commit.toString().getBytes(StandardCharsets.UTF_8);
 
+        Git git = new Git(Path.of("."));
+
         // Create and write the Git object (commit)
-        String commitHash = new GitObject("commit", content).write();
+        String commitHash = git.writeObject(commit);
 
         // Output only the SHA-1 hash, no additional text
         System.out.println(commitHash);

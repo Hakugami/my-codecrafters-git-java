@@ -2,7 +2,8 @@ package model;
 
 import java.util.Objects;
 
-public record Commit(String author, String message, String treeHash, String parentHash, String commitDate, String committerInfo) {
+public record Commit(String treeHash, String parentHash, AuthorSignature author,
+                     AuthorSignature committer, String message) {
 
     @Override
     public String toString() {
@@ -17,8 +18,9 @@ public record Commit(String author, String message, String treeHash, String pare
         }
 
         // Add author and committer info
-        commitBuilder.append("author ").append(author).append(" ").append(commitDate).append("\n");
-        commitBuilder.append("committer ").append(committerInfo).append(" ").append(commitDate).append("\n\n");
+        commitBuilder.append("author ").append(author.format()).append("\n");
+        commitBuilder.append("committer ").append(committer.format()).append("\n");
+
 
         // Add the commit message
         commitBuilder.append(message).append("\n");
