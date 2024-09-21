@@ -1,8 +1,12 @@
+package command.impl;
+
+import command.GitCommand;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-class InitCommand implements GitCommand {
+public class InitCommand implements GitCommand {
     @Override
     public void execute(String[] args) throws IOException {
         Path gitDir = Path.of(".git");

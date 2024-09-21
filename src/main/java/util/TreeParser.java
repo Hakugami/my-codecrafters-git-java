@@ -1,9 +1,11 @@
+package util;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HexFormat;
 import java.util.List;
 
-class TreeParser {
+public class TreeParser {
     public static List<String> parse(byte[] treeContent) {
         List<String> entries = new ArrayList<>();
         int i = 0;

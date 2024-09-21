@@ -1,6 +1,12 @@
+package command.impl;
+
+import command.GitCommand;
+import model.GitObject;
+
 import java.io.IOException;
 
-class CatFileCommand implements GitCommand {
+
+public class CatFileCommand implements GitCommand {
     @Override
     public void execute(String[] args) throws IOException {
         if (args.length < 1) {

@@ -1,9 +1,14 @@
+package command.impl;
+
+import command.GitCommand;
+import model.GitObject;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
-class HashObjectCommand implements GitCommand {
+public class HashObjectCommand implements GitCommand {
     @Override
     public void execute(String[] args) throws IOException, NoSuchAlgorithmException {
         if (args.length < 1) {

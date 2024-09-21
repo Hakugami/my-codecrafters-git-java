@@ -1,6 +1,12 @@
+package command.impl;
+
+import command.GitCommand;
+import model.GitObject;
+import util.TreeParser;
+
 import java.io.IOException;
 
-class LsTreeCommand implements GitCommand {
+public class LsTreeCommand implements GitCommand {
     @Override
     public void execute(String[] args) throws IOException {
         if (args.length < 1) {

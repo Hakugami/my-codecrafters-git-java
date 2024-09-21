@@ -1,3 +1,6 @@
+import command.GitCommand;
+import command.impl.GitCommandFactory;
+
 import java.util.Arrays;
 
 public class Main {
